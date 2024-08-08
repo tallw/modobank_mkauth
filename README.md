@@ -42,7 +42,9 @@ e extrair dentro da /var/www/
 após extrair, dar os seguintes comandos:
 
 chmod 777 /var/www/pix/gera.py
+
 chmod 777 /var/www/pix/img
+
 chmod 777 /var/www/pix/web.py
 
 
