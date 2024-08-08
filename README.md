@@ -48,4 +48,14 @@ chmod 777 /var/www/pix/img
 chmod 777 /var/www/pix/web.py
 
 
-Após 
+Após isso, entrar na sua integração : http://seumkauth/pix/admin, o login e senha é o que voce utiliza pra logar no http://mkauth/admin
+após logado, ir na opção configurar API e preencher os dados.
+
+após preencher, va na pasta do pix e execute o seguinte comando.
+python3.5 web.py
+
+para versões que utilizam python3.7
+python3.7 web.py
+
+após rodar ele configurou seu webhook para receber os pix.
+
