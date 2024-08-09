@@ -48,8 +48,7 @@ chmod 777 /var/www/pix/img
 chmod 777 /var/www/pix/web.py
 
 
-Após isso, entrar na sua integração : http://seumkauth/pix/admin, o login e senha é o que voce utiliza pra logar no http://mkauth/admin
-após logado, ir na opção configurar API e preencher os dados.
+
 
 após preencher, va na pasta do pix e execute o seguinte comando.
 python3.5 web.py
@@ -59,3 +58,10 @@ python3.7 web.py
 
 após rodar ele configurou seu webhook para receber os pix.
 
+
+PARA UTILIZAR É SIMPLES:
+BASTA CRIAR UMA CONTA DO TIPO BOLETO PROPRIO DO PROVEDOR E POR O NOME DE "modobank" e salvar.
+ai você gera os boletos e em seguida vai Após isso, entrar na sua integração : http://seumkauth/pix/admin, o login e senha é o que voce utiliza pra logar no http://mkauth/admin
+após logado, ir na opção configurar API e preencher os dados.
+
+e procura pela opção de gerar boleto e procura pelo nome do cliente e busca, após achar, click no botão gerar boleto.
