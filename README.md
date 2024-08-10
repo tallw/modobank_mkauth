@@ -48,7 +48,9 @@ chmod 777 /var/www/pix/img
 chmod 777 /var/www/pix/web.py
 
 
-
+PARA ACESSAR NA VERSÃO 23 EM DIANTE
+LOGIN: ADMIN
+SENHA: 123
 
 após preencher, va na pasta do pix e execute o seguinte comando.
 python3.5 web.py
