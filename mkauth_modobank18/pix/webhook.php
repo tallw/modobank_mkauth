@@ -1,0 +1,170 @@
+<?php
+include 'db.php'; // Incluir arquivo de conexão com o banco de dados
+
+// Definir cabeçalhos de resposta para JSON
+header('Content-Type: application/json');
+
+// Configurar arquivo de log
+$log_file = 'webhook_log.txt';
+
+// Função para registrar log
+function log_message($message) {
+    global $log_file;
+    $time = date('Y-m-d H:i:s');
+    $log_message = "[$time] $message" . PHP_EOL;
+    file_put_contents($log_file, $log_message, FILE_APPEND);
+}
+
+log_message("Requisição recebida: " . $_SERVER['REQUEST_METHOD']);
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $response = array('message' => 'Webhook configurado com sucesso');
+    echo json_encode($response);
+    log_message("Resposta GET enviada: " . json_encode($response));
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Obter o conteúdo da solicitação
+    $input = file_get_contents('php://input');
+    log_message("Payload recebido: " . $input);
+    $data = json_decode($input, true);
+
+    if (json_last_error() === JSON_ERROR_NONE) {
+        // Verificar se os dados são válidos
+        $txid = isset($data['txid']) ? $data['txid'] : '';
+        $valor = isset($data['valor']) ? $data['valor'] : '';
+        $horario = isset($data['horario']) ? $data['horario'] : '';
+        $pagador_cpf_cnpj = isset($data['pagador']['cpf']) ? $data['pagador']['cpf'] : (isset($data['pagador']['cnpj']) ? $data['pagador']['cnpj'] : '');
+        $pagador_nome = isset($data['pagador']['nome']) ? $data['pagador']['nome'] : '';
+        $end_to_end_id = isset($data['endToEndId']) ? $data['endToEndId'] : '';
+
+        // Verificação básica dos dados recebidos
+        if (!empty($txid) && !empty($valor) && !empty($horario)) {
+            // Iniciar transação
+            $conn->autocommit(FALSE);
+
+            try {
+                // Inserir o payload completo na tabela de logs do webhook
+                $stmt = $conn->prepare("INSERT INTO webhook_logs (payload, recebido_em) VALUES (?, NOW())");
+                if (!$stmt) {
+                    throw new Exception("Erro ao preparar declaração SQL para inserir em webhook_logs: " . $conn->error);
+                }
+                $stmt->bind_param("s", $input);
+
+                if (!$stmt->execute()) {
+                    throw new Exception("Erro ao executar declaração SQL para inserir em webhook_logs: " . $stmt->error);
+                }
+
+                // Obter o ID do registro inserido
+                $last_id = $stmt->insert_id;
+                log_message("Inserção bem-sucedida em webhook_logs, ID: " . $last_id);
+                $stmt->close();
+
+                // Atualizar os dados específicos na tabela webhook_logs
+                $stmt = $conn->prepare("UPDATE webhook_logs SET txid = ?, valor = ?, horario = ?, pagador_cpf_cnpj = ?, pagador_nome = ?, end_to_end_id = ? WHERE id = ?");
+                if (!$stmt) {
+                    throw new Exception("Erro ao preparar declaração SQL para atualizar webhook_logs: " . $conn->error);
+                }
+                $stmt->bind_param("ssssssi", $txid, $valor, $horario, $pagador_cpf_cnpj, $pagador_nome, $end_to_end_id, $last_id);
+
+                if (!$stmt->execute()) {
+                    throw new Exception("Erro ao executar declaração SQL para atualizar webhook_logs: " . $stmt->error);
+                }
+                $stmt->close();
+                log_message("Atualização bem-sucedida em webhook_logs para ID: " . $last_id);
+
+                // Comparar txid com pix_info e atualizar sis_lanc
+                $query = "SELECT pi.id_lanc, wl.recebido_em, wl.valor 
+                          FROM pix_info2 pi
+                          JOIN webhook_logs wl ON wl.txid = pi.txid
+                          WHERE wl.id = ?";
+                $stmt = $conn->prepare($query);
+                if (!$stmt) {
+                    throw new Exception("Erro ao preparar declaração SQL para selecionar de pix_info: " . $conn->error);
+                }
+                $stmt->bind_param("i", $last_id);
+                $stmt->execute();
+                $stmt->bind_result($id_lanc, $recebido_em, $valor);
+                if ($stmt->fetch()) {
+                    $stmt->close();
+
+                    // Atualizar sis_lanc
+                    $updateQuery = "UPDATE sis_lanc SET formapag = 'dinheiro', status = 'pago', num_recibos = 1, datapag = ?, coletor = 'notificacao', valorpag = ? WHERE id = ?";
+                    $stmt = $conn->prepare($updateQuery);
+                    if (!$stmt) {
+                        throw new Exception("Erro ao preparar declaração SQL para atualizar sis_lanc: " . $conn->error);
+                    }
+                    $stmt->bind_param("ssi", $recebido_em, $valor, $id_lanc);
+
+                    if (!$stmt->execute()) {
+                        throw new Exception("Erro ao executar declaração SQL para atualizar sis_lanc: " . $stmt->error);
+                    }
+                    $stmt->close();
+
+                    // Inserir log em sis_log
+                    $logMessage = "baixou o titulo " . $id_lanc . " por pagamento com modobank - IP:127.0.0.1";
+                    $logQuery = "INSERT INTO sis_logs (registro, data, login, tipo, operacao,id) VALUES (?, NOW(), 'mk-bot', 'admin', 'OPERFALL',default)";
+                    $stmt = $conn->prepare($logQuery);
+                    if (!$stmt) {
+                        throw new Exception("Erro ao preparar declaração SQL para inserir em sis_log: " . $conn->error);
+                    }
+                    $stmt->bind_param("s", $logMessage);
+
+                    if (!$stmt->execute()) {
+                        throw new Exception("Erro ao executar declaração SQL para inserir em sis_log: " . $stmt->error);
+                    }
+                    $stmt->close();
+
+                    // Atualizar o status em pix_info para LIQUIDADO
+                    $updatePixInfoQuery = "UPDATE pix_info2 SET status = 'LIQUIDADO' WHERE txid = ?";
+                    $stmt = $conn->prepare($updatePixInfoQuery);
+                    if (!$stmt) {
+                        throw new Exception("Erro ao preparar declaração SQL para atualizar pix_info: " . $conn->error);
+                    }
+                    $stmt->bind_param("s", $txid);
+
+                    if (!$stmt->execute()) {
+                        throw new Exception("Erro ao executar declaração SQL para atualizar pix_info: " . $stmt->error);
+                    }
+                    $stmt->close();
+
+                    // Commit da transação
+                    $conn->commit();
+
+                    $response = array('success' => true, 'message' => 'Dados processados e atualizações realizadas com sucesso');
+                    echo json_encode($response);
+                    log_message("Dados processados e atualizações realizadas com sucesso: " . json_encode($response));
+                } else {
+                    throw new Exception("Registro não encontrado em pix_info");
+                }
+            } catch (Exception $e) {
+                // Rollback da transação em caso de erro
+                $conn->rollback();
+                $response = array('success' => false, 'message' => $e->getMessage());
+                echo json_encode($response);
+                log_message($e->getMessage());
+            }
+            $conn->autocommit(TRUE); // Restaurar modo de autocommit
+        } else {
+            // Dados inválidos
+            $response = array('success' => false, 'message' => 'Dados inválidos recebidos');
+            echo json_encode($response);
+            log_message("Dados inválidos recebidos: " . $input);
+        }
+    } else {
+        // Enviar resposta de erro ao decodificar JSON
+        $response = array('success' => false, 'message' => 'Erro ao decodificar JSON');
+        echo json_encode($response);
+        log_message("Erro ao decodificar JSON: " . json_last_error_msg());
+    }
+} else {
+    // Enviar resposta de erro para métodos não suportados
+    $response = array('success' => false, 'message' => 'Método não suportado');
+    echo json_encode($response);
+    log_message("Método não suportado: " . $_SERVER['REQUEST_METHOD']);
+}
+
+$conn->close();
+?>
+

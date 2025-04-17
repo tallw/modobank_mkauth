@@ -1,0 +1,136 @@
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: ../admin/index.php");
+    exit();
+}
+include '../db.php';
+
+$login = $_GET['login'];
+
+$sql = "SELECT * FROM sis_cliente WHERE login = '$login'";
+$result = $conn->query($sql);
+$cliente = $result->fetch_assoc();
+
+$aberto_sql = "SELECT * FROM sis_lanc WHERE login = '$login' AND status = 'aberto' AND deltitulo =0  and nossonum is null";
+$aberto_result = $conn->query($aberto_sql);
+$faturas_aberto = array();
+$requests_data = array();
+
+function utf8ize($mixed) {
+    if (is_array($mixed)) {
+        foreach ($mixed as $key => $value) {
+            $mixed[$key] = utf8ize($value);
+        }
+    } else if (is_string($mixed)) {
+        return utf8_encode($mixed);
+    }
+    return $mixed;
+}
+
+while ($fatura = $aberto_result->fetch_assoc()) {
+    $id_lanc = $fatura['id'];
+
+    if ($fatura['status'] !== 'pago') {
+        $pix_sql = "SELECT * FROM pix_info2 WHERE id_lanc = '$id_lanc'";
+        $pix_result = $conn->query($pix_sql);
+        $pix_info = $pix_result->fetch_assoc();
+
+        if ($pix_info) {
+            $fatura['pix_copia_cola'] = $pix_info['pix_copia_cola'];
+            $fatura['qrcode'] = $pix_info['qrcode'];
+            $fatura['status_boleto'] = $pix_info['status'];
+        } else {
+            // Adicionar dados ao array de requisições
+            $requests_data[] = array(
+                "id_cliente" => utf8ize($cliente['id']),
+                "nome" => utf8ize($cliente['nome']),
+                "identificacao" => utf8ize($cliente['cpf_cnpj']),
+                "valor" => utf8ize($fatura['valor']), // Use "valor" em vez de "valor_original"
+                "endereco" => utf8ize($cliente['endereco']),
+                "data_vencimento" => utf8ize($fatura['datavenc']),
+                "descricao" => utf8ize(isset($fatura['obs']) ? $fatura['obs'] : 'Pagamento de Fatura'),
+                "cpf" => utf8ize($cliente['cpf_cnpj']), // Adicionar CPF no formato esperado
+                "id_lanc" => utf8ize($id_lanc)
+            );
+        }
+    }
+
+    $faturas_aberto[] = $fatura;
+}
+
+// Enviar requisições ao script gerar_boleto.php se houver dados
+if (!empty($requests_data)) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "http://localhost/pix/gerar_boleto.php");
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, "dados=" . json_encode($requests_data));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $boleto_results = json_decode($response, true);
+
+    if (json_last_error() === JSON_ERROR_NONE) {
+        if (is_array($boleto_results)) { // Verifique se é um array
+            foreach ($boleto_results as $boleto_data) {
+                if (!isset($boleto_data['error'])) {
+                    // Atualizar fatura com os dados retornados
+                    foreach ($faturas_aberto as &$fatura) {
+                        if ($fatura['id'] == $boleto_data['txid']) {
+                            $fatura['pix_copia_cola'] = $boleto_data['pixCopiaECola'];
+                            $fatura['qrcode'] = $boleto_data['qrcode'];
+                            $fatura['status_boleto'] = $boleto_data['status'];
+                        }
+                    }
+                }
+            }
+            log_message("Boletos gerados com sucesso para o cliente $login.");
+        } else {
+            log_message("Resposta do script gerar_boleto.php não é um array: $response");
+        }
+    } else {
+        log_message("Resposta JSON inválida do script gerar_boleto.php: $response");
+    }
+} else {
+    log_message("Nenhuma fatura aberta encontrada para o cliente $login.");
+}
+
+function formatarData($data) {
+    $date = new DateTime($data);
+    return $date->format('Y-m-d');
+}
+
+function log_message($message) {
+     $log_file = 'debug_log.txt';
+    $time = date('Y-m-d H:i:s');
+    $log_message = "[$time] $message" . PHP_EOL;
+     file_put_contents($log_file, $log_message, FILE_APPEND);
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Resultado</h2>
+        <?php if (!empty($requests_data)): ?>
+            <div class="alert alert-success">
+                Boletos gerados com sucesso para o cliente <?php echo htmlspecialchars($login); ?>.
+            </div>
+        <?php else: ?>
+            <div class="alert alert-warning">
+                Nenhuma fatura aberta encontrada para o cliente <?php echo htmlspecialchars($login); ?>.
+            </div>
+        <?php endif; ?>
+    </div>
+</body>
+</html>
+
