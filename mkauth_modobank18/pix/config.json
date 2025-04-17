@@ -1,9 +1,0 @@
-{
-    "token_url": "PEGAR  SUA URL DE TOKEN E COLE AQUI",
-    "client_id": "DIGITE SEU CLIENT ID",
-    "client_secret": "DIGITE SEU CLIENT_SECRET",
-    "crt": "certificado/PIX-HMG-CLIENTE.crt",
-    "key": "certificado/PIX-HMG-CLIENTE.key",
-    "chave_pix": "SUAVE CHAVE PIX",
-    "webhook_url": "http://localhost/pix/webhook.hhvm"
-}
