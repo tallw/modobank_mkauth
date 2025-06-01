@@ -1,69 +1,142 @@
-Para instalar o integrador do modobank, deve realizar alguns procedimentos.
+Claro! Abaixo está o conteúdo reorganizado, formatado e com símbolos para facilitar a leitura. Ele está pronto para ser adicionado ao GitHub como um `README.md`:
 
+---
 
-Verifique a versão do seu mk auth se o mesmo é 18 ou acima.
+# 🧾 Integrador Modobank para MK-AUTH
 
-pode pegar o codigo no github:
+Este integrador permite a geração de boletos via Modobank no sistema **MK-AUTH**.
 
+---
 
-se utilizar a versão abaixo da 20, você tera que baixar o que utiliza o .php, ja as demais versões já estão na versão .hhvm
+## ✅ Requisitos
 
+### 🔍 Versão do MK-AUTH
 
+* ⚠️ Verifique a **versão do seu MK-AUTH**:
 
-Após isso, verifique a versão do seu python, geralmente versões 18 até 19 utilizam o python3.5
-então você vai baixar esse arquivo.
+  * ✅ Versão **18 até 19**: utiliza arquivos `.php` e **Python 3.5**.
+  * ✅ Versão **20 ou superior**: utiliza arquivos `.hhvm` e **Python 3.7 ou superior**.
 
-******************************************************************************
-versão que utiliza python 3.5
+---
+
+## 💻 Instalação do Python e Pip
+
+### 🐍 Para Python 3.5 (MK-AUTH v18 a v19)
+
+```bash
 curl https://bootstrap.pypa.io/pip/3.5/get-pip.py -o get-pip.py
 python3.5 get-pip.py
-e aguarde terminar a instalação.
+```
 
-após ele terminar de instalar, chamar os seguintes comando:
+Após a instalação do `pip`, execute:
+
+```bash
 pip install request qrcode
+```
 
+---
 
+### 🐍 Para Python 3.7 (MK-AUTH v20+)
 
-versão que utiliza python 3.7
+```bash
 curl https://bootstrap.pypa.io/pip/3.7/get-pip.py -o get-pip.py
 python3.7 get-pip.py
-e aguarde terminar a instalação.
+```
 
-após ele terminar de instalar, chamar os seguintes comando:
+Após a instalação do `pip`, execute:
+
+```bash
 pip3 install request qrcode
+```
 
-********************************************************************************
+---
 
+## 📦 Baixando e Instalando o Integrador
 
-baixar o arquivo .zip 
+1. 🔽 Baixe o arquivo `.zip` do projeto no GitHub.
+2. 📂 Extraia o conteúdo para a pasta:
 
+```bash
+/var/www/
+```
 
-e extrair dentro da /var/www/
-após extrair, dar os seguintes comandos:
+3. 🛠️ Ajuste as permissões:
 
+```bash
 chmod 777 /var/www/pix/gera.py
-
 chmod 777 /var/www/pix/img
-
 chmod 777 /var/www/pix/web.py
+```
 
+---
 
-PARA ACESSAR NA VERSÃO 23 EM DIANTE
-LOGIN: ADMIN
-SENHA: 123
+## 🔐 Acesso ao Painel (Versão 23+)
 
-após preencher, va na pasta do pix e execute o seguinte comando.
+* 🌐 Acesse: `http://seumkauth/pix/admin`
+* 👤 Login: `ADMIN`
+* 🔑 Senha: `123`
+
+---
+
+## ▶️ Iniciando o Webhook
+
+### 🔁 Para Python 3.5:
+
+```bash
 python3.5 web.py
+```
 
-para versões que utilizam python3.7
+### 🔁 Para Python 3.7:
+
+```bash
 python3.7 web.py
+```
 
-após rodar ele configurou seu webhook para receber os pix.
+> Após isso, seu Webhook estará ativo para receber os pagamentos PIX.
 
+---
 
-PARA UTILIZAR É SIMPLES:
-BASTA CRIAR UMA CONTA DO TIPO BOLETO PROPRIO DO PROVEDOR E POR O NOME DE "modobank" e salvar.
-ai você gera os boletos e em seguida vai Após isso, entrar na sua integração : http://seumkauth/pix/admin, o login e senha é o que voce utiliza pra logar no http://mkauth/admin
-após logado, ir na opção configurar API e preencher os dados.
+## 🛠️ Configuração e Uso
 
-e procura pela opção de gerar boleto e procura pelo nome do cliente e busca, após achar, click no botão gerar boleto.
+1. 🔧 **Crie uma conta do tipo "Boleto Próprio do Provedor"** com o nome:
+
+```
+modobank
+```
+
+2. 💾 Salve a conta.
+
+3. 🖥️ Acesse o painel de integração:
+
+```
+http://seumkauth/pix/admin
+```
+
+4. 🔐 Use o mesmo login e senha do seu painel administrativo do MK-AUTH.
+
+5. ⚙️ Vá na opção **"Configurar API"** e preencha os dados da sua conta Modobank.
+
+---
+
+## 🧾 Gerando Boletos
+
+1. Acesse a opção **"Gerar Boleto"** no painel.
+2. 🔎 Pesquise pelo **nome do cliente**.
+3. ▶️ Clique no botão **"Gerar Boleto"** ao lado do nome.
+
+---
+
+## 📁 Observações
+
+* O sistema utiliza `qrcode` para exibir o código de pagamento.
+* As imagens são salvas na pasta `/var/www/pix/img`.
+
+---
+
+## 📬 Suporte
+
+Em caso de dúvidas ou sugestões, entre em contato com o desenvolvedor ou abra uma *issue* aqui no GitHub.
+
+---
+
+Se quiser que eu gere o arquivo `README.md` completo e formatado para você subir no GitHub, posso criar e enviar aqui também. Deseja isso?
