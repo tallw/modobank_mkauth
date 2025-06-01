@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Configurar API</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@1.13.1/css/OverlayScrollbars.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/js/adminlte.min.js"></script>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <?php include 'navbar.php'; ?>
+        <?php include 'sidebar.php'; ?>
+        <div class="content-wrapper">
+            <section class="content">
+                <div class="container-fluid">
+                    <h1>Configurar API</h1>
+                    <?php
+                    $config = json_decode(file_get_contents('../config.json'), true);
+                    ?>
+                    <form action="salvar_config.php" method="post">
+                        <div class="form-group">
+                            <label for="token_url">Token URL</label>
+                            <input type="text" class="form-control" id="token_url" name="token_url" value="<?php echo htmlspecialchars($config['token_url']); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="client_id">Client ID</label>
+                            <input type="text" class="form-control" id="client_id" name="client_id" value="<?php echo htmlspecialchars($config['client_id']); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="client_secret">Client Secret</label>
+                            <input type="text" class="form-control" id="client_secret" name="client_secret" value="<?php echo htmlspecialchars($config['client_secret']); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="crt">Certificado</label>
+                            <input type="text" class="form-control" id="crt" name="crt" value="<?php echo htmlspecialchars($config['crt']); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="key">Chave</label>
+                            <input type="text" class="form-control" id="key" name="key" value="<?php echo htmlspecialchars($config['key']); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="chave_pix">Chave PIX</label>
+                            <input type="text" class="form-control" id="chave_pix" name="chave_pix" value="<?php echo htmlspecialchars($config['chave_pix']); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="webhook_url">Webhook URL</label>
+                            <input type="text" class="form-control" id="webhook_url" name="webhook_url" value="<?php echo htmlspecialchars($config['webhook_url']); ?>">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+        <?php include 'footer.php'; ?>
+    </div>
+</body>
+</html>
+

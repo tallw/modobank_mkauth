@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Reescrita para o URL de faturas
+RewriteRule ^pix/faturas/([a-zA-Z0-9_-]+)/ajax$ pix/faturas.php?login=$1&ajax=1 [L,QSA]
+RewriteRule ^pix/faturas/([a-zA-Z0-9_-]+)$ pix/faturas.php?login=$1 [L,QSA]
+
+# Reescrita para o URL de gerar boleto
+RewriteRule ^pix/gerar_boleto/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)$ pix/gerar_boleto.php?nome=$1&cpf=$2&valor=$3&endereco=$4&data_vencimento=$5&id_lanc=$6&descricao=$7 [L,QSA]
+

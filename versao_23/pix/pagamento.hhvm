@@ -1,0 +1,23 @@
+<?php
+include 'db.hhvm';
+
+$fatura_id = $_GET['id'];
+
+$sql = "SELECT f.*, p.qrcode, p.pix_copia_cola FROM sis_lanc f
+        JOIN pix_info p ON f.login = (SELECT login FROM sis_cliente WHERE id = p.id_cliente)
+        WHERE f.id = '$fatura_id' AND p.status = 'aberto'";
+$result = $conn->query($sql);
+$fatura = $result->fetch_assoc();
+?>
+
+<h2>Detalhes do Pagamento</h2>
+<p>Valor: R$<?php echo $fatura['valor']; ?></p>
+<p>QR Code:</p>
+<img src="<?php echo $fatura['qrcode']; ?>" alt="QR Code">
+<p>Pix Copia e Cola:</p>
+<textarea readonly><?php echo $fatura['pix_copia_cola']; ?></textarea>
+
+<?php
+$conn->close();
+?>
+

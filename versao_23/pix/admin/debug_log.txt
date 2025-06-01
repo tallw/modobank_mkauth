@@ -1,0 +1,63 @@
+s
+[2024-08-02 07:51:43] Cliente não selecionado.
+[2024-08-02 07:51:43] Conexão com o banco de dados fechada.
+[2024-08-02 07:52:18] Cliente não selecionado.
+[2024-08-02 07:52:18] Conexão com o banco de dados fechada.
+[2024-08-02 07:54:15] ID do cliente não fornecido ou inválido.
+[2024-08-02 07:54:50] ID do cliente não fornecido ou inválido.
+[2024-08-02 07:55:47] ID do cliente não fornecido ou inválido.
+[2024-08-02 07:57:20] ID do cliente recebido: 0
+[2024-08-02 07:57:20] Consulta SQL para cliente: SELECT login, id, nome, cpf_cnpj, endereco FROM sis_cliente WHERE id = 0
+[2024-08-02 07:57:20] Cliente não encontrado com ID: 0
+[2024-08-02 07:57:20] Conexão com o banco de dados fechada.
+[2024-08-02 08:50:33] ID do cliente não fornecido ou inválido.
+[2024-08-02 08:51:07] ID do cliente não fornecido ou inválido.
+[2024-08-02 08:51:11] ID do cliente não fornecido ou inválido.
+[2024-08-02 08:52:39] ID do cliente não fornecido ou inválido.
+[2024-08-02 08:53:39] ID do cliente não fornecido ou inválido.
+[2024-08-02 08:55:22] ID do cliente não fornecido ou inválido.
+[2024-08-02 08:56:08] ID do cliente não fornecido ou inválido.
+[2024-08-02 08:58:10] ID do cliente não fornecido ou inválido.
+[2024-08-02 08:58:30] ID do cliente recebido: 3218
+[2024-08-02 08:58:30] Cliente encontrado: ID: 3218, Nome: thalles jose, CPF/CNPJ: 07241785460, Endereço: rua rosa de lourdes guimaraes
+[2024-08-02 08:59:36] ID do cliente recebido: 3218
+[2024-08-02 08:59:36] Cliente encontrado: ID: 3218, Nome: thalles jose, CPF/CNPJ: 07241785460, Endereço: rua rosa de lourdes guimaraes
+[2024-08-02 09:00:37] ID do cliente recebido: 3218
+[2024-08-02 09:00:37] Cliente encontrado: ID: 3218, Nome: thalles jose, CPF/CNPJ: 07241785460, Endereço: rua rosa de lourdes guimaraes
+[2024-08-02 09:00:45] ID do cliente recebido: 3218
+[2024-08-02 09:00:45] Cliente encontrado: ID: 3218, Nome: thalles jose, CPF/CNPJ: 07241785460, Endereço: rua rosa de lourdes guimaraes
+[2024-08-02 09:01:36] ID do cliente recebido: 3218
+[2024-08-02 09:01:36] Cliente encontrado: ID: 3218, Nome: thalles jose, CPF/CNPJ: 07241785460, Endereço: rua rosa de lourdes guimaraes
+[2024-08-02 09:03:05] ID do cliente recebido: 3218
+[2024-08-02 09:03:05] Cliente encontrado: ID: 3218, Nome: thalles jose, CPF/CNPJ: 07241785460, Endereço: rua rosa de lourdes guimaraes
+[2024-08-02 09:03:05] Nenhuma fatura aberta para o cliente selecionado.
+[2024-08-02 09:03:05] Conexão com o banco de dados fechada.
+[2024-08-02 09:03:28] ID do cliente recebido: 3218
+[2024-08-02 09:03:28] Cliente encontrado: ID: 3218, Nome: thalles jose, CPF/CNPJ: 07241785460, Endereço: rua rosa de lourdes guimaraes
+[2024-08-02 09:03:28] Nenhuma fatura aberta para o cliente selecionado.
+[2024-08-02 09:03:28] Conexão com o banco de dados fechada.
+[2024-08-02 09:03:29] ID do cliente recebido: 3218
+[2024-08-02 09:03:29] Cliente encontrado: ID: 3218, Nome: thalles jose, CPF/CNPJ: 07241785460, Endereço: rua rosa de lourdes guimaraes
+[2024-08-02 09:03:29] Nenhuma fatura aberta para o cliente selecionado.
+[2024-08-02 09:03:29] Conexão com o banco de dados fechada.
+[2024-08-02 09:03:30] ID do cliente recebido: 3218
+[2024-08-02 09:03:30] Cliente encontrado: ID: 3218, Nome: thalles jose, CPF/CNPJ: 07241785460, Endereço: rua rosa de lourdes guimaraes
+[2024-08-02 09:03:30] Nenhuma fatura aberta para o cliente selecionado.
+[2024-08-02 09:03:30] Conexão com o banco de dados fechada.
+[2024-08-02 09:04:47] ID do cliente recebido: 3218
+[2024-08-02 09:04:47] Cliente encontrado: ID: 3218, Nome: thalles jose, CPF/CNPJ: 07241785460, Endereço: rua rosa de lourdes guimaraes
+[2024-08-02 09:04:47] Nenhuma fatura aberta para o cliente selecionado.
+[2024-08-02 09:04:47] Conexão com o banco de dados fechada.
+[2024-08-02 09:06:41] ID do cliente recebido: 3218
+[2024-08-02 09:06:41] Cliente encontrado: ID: 3218, Nome: thalles jose, CPF/CNPJ: 07241785460, Endereço: rua rosa de lourdes guimaraes
+[2024-08-02 09:06:41] Nenhuma fatura aberta para o cliente selecionado.
+[2024-08-02 09:06:41] Conexão com o banco de dados fechada.
+[2024-08-02 09:08:20] ID do cliente recebido: 3218
+[2024-08-02 09:08:20] Cliente encontrado: ID: 3218, Nome: thalles jose, CPF/CNPJ: 07241785460, Endereço: rua rosa de lourdes guimaraes
+[2024-08-02 09:08:20] Nenhuma fatura aberta para o cliente selecionado.
+[2024-08-02 09:08:20] Conexão com o banco de dados fechada.
+[2024-08-02 09:10:32] ID do cliente recebido: 3218
+[2024-08-02 09:10:32] Cliente encontrado: ID: 3218, Nome: thalles jose, CPF/CNPJ: 07241785460, Endereço: rua rosa de lourdes guimaraes
+[2024-08-02 09:10:32] Nenhuma fatura aberta para o cliente selecionado.
+[2024-08-02 09:10:32] Conexão com o banco de dados fechada.
+[2024-08-02 09:33:02] Boletos gerados com sucesso para o cliente thalles.tresirmas.

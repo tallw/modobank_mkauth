@@ -1,0 +1,21 @@
+<?php
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $config = [
+        'token_url' => $_POST['token_url'],
+        'client_id' => $_POST['client_id'],
+        'client_secret' => $_POST['client_secret'],
+        'crt' => $_POST['crt'],
+        'key' => $_POST['key'],
+        'chave_pix' => $_POST['chave_pix'],
+        'webhook_url' => $_POST['webhook_url']
+    ];
+
+    // Salvar o JSON sem as barras invertidas adicionais
+    $json_data = json_encode($config, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+
+    file_put_contents('../config.json', $json_data);
+    header('Location: configurar_api.php');
+    exit;
+}
+?>
+
