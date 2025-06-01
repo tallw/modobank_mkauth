@@ -1,3 +1,5 @@
+#dados fundamentais para conexao
+
 <?php
 $servername = "localhost";
 $username = "root";
