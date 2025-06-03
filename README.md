@@ -1,5 +1,3 @@
-Claro! Abaixo está o conteúdo reorganizado, formatado e com símbolos para facilitar a leitura. Ele está pronto para ser adicionado ao GitHub como um `README.md`:
-
 ---
 
 # 🧾 Integrador Modobank para MK-AUTH
@@ -138,5 +136,3 @@ http://seumkauth/pix/admin
 Em caso de dúvidas ou sugestões, entre em contato com o desenvolvedor ou abra uma *issue* aqui no GitHub.
 
 ---
-
-Se quiser que eu gere o arquivo `README.md` completo e formatado para você subir no GitHub, posso criar e enviar aqui também. Deseja isso?
